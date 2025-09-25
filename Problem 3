@@ -1,0 +1,109 @@
+#include <iostream>
+using namespace std;
+
+class DB; // forward declaration
+
+class DM {
+private:
+    int meter;
+    int cm;
+
+public:
+    // Constructors
+    DM() {
+        meter = 0;
+        cm = 0;
+    }
+
+    DM(int m, int c) {
+        meter = m;
+        cm = c;
+    }
+
+    void getdata() {
+        cout << "Enter distance in meters: ";
+        cin >> meter;
+        cout << "Enter distance in centimeters: ";
+        cin >> cm;
+    }
+
+    void showdata() {
+        cout << meter << " meters " << cm << " centimeters" << endl;
+    }
+
+    // Friend function declaration
+    friend DM add(DM d, DB b);
+};
+
+class DB {
+private:
+    int feet;
+    int inch;
+
+public:
+    // Constructors
+    DB() {
+        feet = 0;
+        inch = 0;
+    }
+
+    DB(int f, int i) {
+        feet = f;
+        inch = i;
+    }
+
+    void getdata() {
+        cout << "Enter distance in feet: ";
+        cin >> feet;
+        cout << "Enter distance in inches: ";
+        cin >> inch;
+    }
+
+    void showdata() {
+        cout << feet << " feet " << inch << " inches" << endl;
+    }
+
+    // Friend function declaration
+    friend DM add(DM d, DB b);
+};
+
+// Friend function definition
+DM add(DM d, DB b) {
+    // Conversion constants
+    float total_cm_dm, total_cm_db;
+    
+    // Convert DM (meters + centimeters) into centimeters
+    total_cm_dm = d.meter * 100 + d.cm;
+
+    // Convert DB (feet + inches) into centimeters
+    // 1 inch = 2.54 cm, 1 foot = 12 inches
+    total_cm_db = (b.feet * 12 + b.inch) * 2.54;
+
+    // Add both distances in centimeters
+    float total_cm = total_cm_dm + total_cm_db;
+
+    // Convert back to meters + centimeters
+    DM temp;
+    temp.meter = int(total_cm / 100);
+    temp.cm = int(total_cm) % 100;
+
+    return temp;
+}
+
+int main() {
+    DM d1, d3;
+    DB b1;
+
+    cout << "Enter distance in metric system (DM):" << endl;
+    d1.getdata();
+
+    cout << "\nEnter distance in imperial system (DB):" << endl;
+    b1.getdata();
+
+    d3 = add(d1, b1);
+
+    cout << "\nDistance in DM after addition: ";
+    d3.showdata();
+
+    return 0;
+}
