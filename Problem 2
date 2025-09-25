@@ -1,37 +1,25 @@
 #include <iostream>
 using namespace std;
-
-class Time {
-private:
+class TIME {
     int hr, min, sec;
-
-    // Helper function to normalize time values
-    void normalize() {
-        if (sec >= 60) {
-            min += sec / 60;
-            sec = sec % 60;
-        }
-        if (min >= 60) {
-            hr += min / 60;
-            min = min % 60;
-        }
-    }
-
 public:
-    // Default constructor
-    Time() {
-        hr = min = sec = 0;
+    TIME() {
+        hr = 0;
+        min = 0;
+        sec = 0;
     }
-
-    // Parameterized constructor
-    Time(int h, int m, int s) {
+    TIME(int h, int m, int s) {
         hr = h;
         min = m;
         sec = s;
         normalize();
     }
+    TIME(const TIME &t) {
+        hr = t.hr;
+        min = t.min;
+        sec = t.sec;
+    }
 
-    // Function to read data
     void getdata() {
         cout << "Enter hours: ";
         cin >> hr;
@@ -41,48 +29,45 @@ public:
         cin >> sec;
         normalize();
     }
-
-    // Function to display time
-    void showdata() {
-        cout << hr << " hr " << min << " min " << sec << " sec" << endl;
+    void showdata() const {
+        cout << hr << " hr : "
+             << min << " min : "
+             << sec << " sec" << endl;
     }
-
-    // Overload + operator
-    Time operator+(Time t) {
-        Time temp;
+    void normalize() {
+        if (sec >= 60) {
+            min += sec / 60;
+            sec %= 60;
+        }
+        if (min >= 60) {
+            hr += min / 60;
+            min %= 60;
+        }
+    }
+    TIME operator+(const TIME &t) const {
+        TIME temp;
         temp.hr = hr + t.hr;
         temp.min = min + t.min;
         temp.sec = sec + t.sec;
         temp.normalize();
         return temp;
     }
-
-    // Overload post-increment (t1++)
-    Time operator++(int) {
-        Time temp = *this;  // store old value
+    TIME operator++(int) {
+        TIME temp = *this;
         sec++;
         normalize();
-        return temp;        // return old value
-    }
+        return temp;
+        }
 };
-
 int main() {
-    Time t1, t2, t3;
-
-    cout << "Enter first time:" << endl;
+    TIME t1, t2, t3;
     t1.getdata();
-
-    cout << "\nEnter second time:" << endl;
     t2.getdata();
-
-    t3 = t1 + t2;   // add two times
-    t1++;           // increment seconds of t1
-
-    cout << "\nTime 3 after addition: ";
+    t3 = t1 + t2;
+    t1++;
+    cout << "\nSum of times (t3): ";
     t3.showdata();
-
-    cout << "Time 1 after increment: ";
+    cout << "Time t1 after increment: ";
     t1.showdata();
-
     return 0;
 }
